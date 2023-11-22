@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <template id="report_product_pricelist_document">
+            <t t-call="web.external_layout">
+                <t t-set="partner" t-value="doc.partner_id"/>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <h2 class="mt16">
+                        <span t-field="doc.name"/>
+                    </h2>
+                    <div class="row mt32 mb32" id="informations" style="margin-top:30px !important;">
+                        <div t-if="doc.date_start" class="col-auto col-3 mw-100 mb-2">
+                            <strong>Date start:</strong>
+                            <p class="m-0" t-field="doc.date_start" t-options='{"widget": "datetime"}'/>
+                        </div>
+                        <div t-if="doc.date_end" class="col-auto col-3 mw-100 mb-2">
+                            <strong>Date end:</strong>
+                            <p class="m-0" t-field="doc.date_end" t-options='{"widget": "datetime"}'/>
+                        </div>
+                        <div t-if="doc.partner_id" class="col-auto col-3 mw-100 mb-2">
+                            <strong>Customer:</strong>
+                            <p class="m-0" t-field="doc.partner_id"/>
+                        </div>
+                    </div>
+                    <table class="table table-sm o_main_table" style="margin-top:30px !important;">
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <th name="th_product" class="text-center">Product</th>
+                                <th name="th_quantity" class="text-center">Quantity min</th>
+                                <th name="th_price" class="text-center">Price</th>
+                                <th name="th_date_start" class="text-center">Date start</th>
+                                <th name="th_date_end" class="text-center">Date end</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="doc.item_ids" t-as="line">
+                                <tr>
+                                    <t t-if="line.product_tmpl_id">
+                                        <td class="text-left"><span t-field="line.product_tmpl_id"/></td>
+                                    </t>
+                                    <t t-if="line.product_id">
+                                        <td class="text-left"><span t-field="line.product_id"/></td>
+                                    </t>
+                                     <t t-if="line.min_quantity">
+                                        <td class="text-center"><span t-field="line.min_quantity"/></td>
+                                    </t>
+                                    <t t-if="line.fixed_price">
+                                        <td class="text-center"><span t-field="line.fixed_price"
+                                        t-options='{"widget": "monetary", "display_currency": line.pricelist_id.currency_id}'/></td>
+                                    </t>
+                                    <t t-if="line.date_start">
+                                        <td class="text-center"><span t-field="line.date_start" t-options='{"widget": "datetime"}'/></td>
+                                    </t>
+                                    <t t-if="line.date_end">
+                                        <td class="text-center"><span t-field="line.date_end" t-options='{"widget": "datetime"}'/></td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                </table>
+                </div>
+            </t>
+    </template>
+
+
+    <template id="report_product_pricelist">
+        <t t-call="web.html_container">
+             <t t-foreach="docs" t-as="doc">
+                <t t-call="product_pricelist_report.report_product_pricelist_document" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+
+</odoo>
